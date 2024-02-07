@@ -35,4 +35,14 @@ To solve the task, proceed as follows:
 
 - Individuals holding a driver's license for less than a year are ineligible to rent. 
 - If the driver's license has been held for less than two years, the rental price is increased by 30%.
-- If the driver's license has been held for less than three years, then an additional 15 euros will be added to the daily rental price during high season. 
+- If the driver's license has been held for less than three years, then an additional 15 euros will be added to the daily rental price during high season.
+
+## Reminder/cheatsheet for refactoring
+
+- Use meaningful names for variables, functions and classes.
+- Use consistent indentation.
+- Separate long functions into smaller parts. 
+- Remove magic numbers - create constants. 
+- Remove unused or unnecessary code. 
+
+- Last but not least: Your code should still work after the refactoring!
