@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Result</title>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -42,28 +43,18 @@
     <ul class="car-list">
         <li class="car-item">
             <div class="car-details">
-                <div class="car-name">Compact Car</div>
-                <div class="car-price">Price: $0 per day</div>
+                <div class="car-name"></div>
+                <div class="car-price">Price: $0 total</div>
             </div>
-        </li>
-        <li class="car-item">
-            <div class="car-details">
-                <div class="car-name">Electric Car</div>
-                <div class="car-price">Price: $0 per day</div>
-            </div>
-        </li>
-        <li class="car-item">
-            <div class="car-details">
-                <div class="car-name">Cabrio</div>
-                <div class="car-price">Price: $0 per day</div>
-            </div>
-        </li>
-        <li class="car-item">
-            <div class="car-details">
-                <div class="car-name">Racer</div>
-                <div class="car-price">Price: $0 per day</div>
             </div>
         </li>
     </ul>
 </body>
+
+<script>
+    var selectedCar = document.getElementById('car-type').value;
+    document.querySelector('.car-name').innerText = selectedCar;
+
+</script>
+
 </html>
