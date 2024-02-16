@@ -2,9 +2,10 @@ const DAY_IN_MS = 24 * 60 * 60 * 1000;
 const MONTH_NO_APRIL = 3;
 const MONTH_NO_OCTOBER = 9;
 
-function price(pickupDate, dropoffDate, carType, age) {
-  const rentDays = totalRentDays(pickupDate, dropoffDate);
+function price(pickupDate, dropoffDate, carType, licenseAge, age) {
+  const rentDays = totalRentDays(pickupDate, dropoffDate); 
   const highSeason = isHighSeason(pickupDate, dropoffDate)
+  console.log(highSeason)
 
   if (isDriverUnderAge(age)) {
     return "Driver too young.";
@@ -12,15 +13,18 @@ function price(pickupDate, dropoffDate, carType, age) {
 
   if (isYoungDriver(age, carType)) {
     return "Drivers younger than 21 can only rent compact cars.";
-  }   
+  }
+  
+  if (!isLicenseValid(licenseAge)) {
+    return "Licenses under 1 year old cannot rent cars."
+  }
 
   let basePrice = calculatePrice(age, rentDays);
 
-  let rentalPrice = calculateTotalPrice(age, carType, rentDays, highSeason, basePrice)
-
+  let rentalPrice = calculateTotalPrice(basePrice, age, carType, rentDays, highSeason, licenseAge)
   return formatPrice(rentalPrice)
 }
-function calculateTotalPrice(basePrice, age, carType, rentDays, highSeason) {
+function calculateTotalPrice(basePrice, age, carType, rentDays, highSeason, licenseAge, isWeekend) {
   let rentalPrice = basePrice;
   if (highSeason) {
     rentalPrice = basePrice * 1.15;
@@ -33,8 +37,22 @@ function calculateTotalPrice(basePrice, age, carType, rentDays, highSeason) {
   if (isLongRental(rentDays) && !highSeason) {
     rentalPrice = basePrice * 0.9;
   }
+  
+  if (!isLicenseOlder(licenseAge)) {
+    rentalPrice = basePrice * 1.3;
+  }
+
+  if (!isLicenseOlderOlder(licenseAge) && highSeason) {
+    rentalPrice = basePrice + 15;
+  }
+
+  if (isWeekend) {
+    rentalPrice = basePrice * 1.05;
+  }
+
   return rentalPrice;
 }
+
 
 function calculatePrice(age, rentDays) {
   return age * rentDays;
@@ -63,19 +81,53 @@ function isDriverUnderAge(age) {
 }
 
 function isRaceUnder25(carType, age) {
+  console.log(carType)
   return age <= 25 && carType === "Racer";
 }
 
-function isYoungDriver(age) {
+function isYoungDriver(age, carType) {
   return age <= 21 && carType !== "Compact";
 }
 
 function isLongRental(rentDays) {
-  rentDays > 10;
+  return rentDays > 10;
 }
 
 function formatPrice(rentalPrice) {
   return 'Price: $' + rentalPrice.toFixed(2);
 }
 
+function isLicenseValid(licenseAge) {
+  return licenseAge >= 1;
+}
+
+function isLicenseOlder(licenseAge) {
+  return licenseAge >= 2;
+}
+
+function isLicenseOlderOlder(licenseAge) {
+  return licenseAge >= 3;
+}
+
+function getEachDay(totalRentDays) {
+  const days = totalRentDays.getDay();
+  for (let i = 0; i < days; i++) {
+    if (days === 0 || days === 6) {
+      console.log(days);
+    }
+  }
+}
+
 exports.price = price;
+exports.isHighSeason = isHighSeason;
+exports.calculateTotalPrice = calculateTotalPrice;
+exports.calculatePrice = calculatePrice;
+exports.totalRentDays = totalRentDays;
+exports.isDriverUnderAge = isDriverUnderAge;
+exports.isRaceUnder25 = isRaceUnder25;
+exports.isYoungDriver = isYoungDriver;
+exports.isLongRental = isLongRental;
+exports.formatPrice = formatPrice;
+exports.isLicenseValid = isLicenseValid;
+exports.isLicenseOlder = isLicenseOlder;
+exports.isLicenseOlderOlder = isLicenseOlderOlder;
