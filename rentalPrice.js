@@ -47,7 +47,7 @@ function calculateTotalPrice(basePrice, age, carType, rentDays, highSeason, lice
   }
 
   if (isWeekend) {
-    rentalPrice = basePrice * 1.05;
+    basePrice *= 1.05
   }
 
   return rentalPrice;
@@ -109,14 +109,22 @@ function isLicenseOlderOlder(licenseAge) {
   return licenseAge >= 3;
 }
 
-function getEachDay(totalRentDays) {
-  const days = totalRentDays.getDay();
-  for (let i = 0; i < days; i++) {
-    if (days === 0 || days === 6) {
-      console.log(days);
+function countWeekends(pickupDate, dropoffDate) {
+  let count = 0;
+  let currentDate = new Date(pickupDate);
+
+  while (currentDate <= dropoffDate) {
+    const day = currentDate.getDay();
+    if (day === 0 || day === 6) {
+      count++;
     }
+    currentDate.setDate(currentDate.getDate() + 1);
   }
+  return count;
 }
+
+
+
 
 exports.price = price;
 exports.isHighSeason = isHighSeason;
