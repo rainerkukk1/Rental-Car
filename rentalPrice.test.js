@@ -15,7 +15,7 @@ describe('price tests', () => {
     });
 
     test ('base price', () => {
-        expect(rental.price('2024-01-01', '2024-02-02', 'Compact', 15, 20)).toBe('Price: $594.00');
+        expect(rental.price('2024-02-19', '2024-03-03', 'Compact', 15, 20)).toBe('Price: $284.00');
     });
 
 }); 
@@ -41,11 +41,11 @@ describe('function tests', () => {
 
 describe('calculateTotalPrice tests', () => {
     test('calculateTotalPrice tests', () => {
-        expect(rental.calculateTotalPrice(200, 20, 'Compact', 10, true, 1)).toBe(215);
+        expect(rental.calculateTotalPrice(200, 0, 20, 'Compact', 10, true, 1, 0)).toBe(215);
     });
 
     test('Racer under 25', () => {
-        expect(rental.calculateTotalPrice(200, 24, 'Racer', 10, true, 1)).toBe(215);
+        expect(rental.calculateTotalPrice(200, 0, 24, 'Racer', 10, true, 1, 0)).toBe(215);
     });
 
 });
@@ -68,13 +68,11 @@ describe('isHighSeason tests', () => {
 });
 
 describe('tunnitoot tests', () => {
-    test('It is not weekend', () => {
-        expect(rental.calculateTotalPrice(150, 50, 'Compact', 3, false, 10, false)).toBe(150);
-    });
-    test('It is weekend', () => {
-        expect(rental.calculateTotalPrice(150, 50, 'Compact', 3, false, 10, true)).toBe(157.5);
-    });
     test('is it weekend', () => {
-        expect(rental.isWeekend('2024-02-16', '2024-02-23')).toBe(true);
+        expect(rental.calculateTotalPrice(150, 50, 24, 'Racer', 10, true, 1, 1)).toBe(152.50);
+    });
+
+    test('count weekends', () => {
+        expect(rental.countWeekends('2024-02-24', '2024-02-25')).toBe(2);
     });
 });

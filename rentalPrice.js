@@ -1,3 +1,5 @@
+const { is } = require("@babel/types");
+
 const DAY_IN_MS = 24 * 60 * 60 * 1000;
 const MONTH_NO_APRIL = 3;
 const MONTH_NO_OCTOBER = 9;
@@ -5,7 +7,7 @@ const MONTH_NO_OCTOBER = 9;
 function price(pickupDate, dropoffDate, carType, licenseAge, age) {
   const rentDays = totalRentDays(pickupDate, dropoffDate); 
   const highSeason = isHighSeason(pickupDate, dropoffDate)
-  console.log(highSeason)
+  const weekends = countWeekends(pickupDate, dropoffDate);
 
   if (isDriverUnderAge(age)) {
     return "Driver too young.";
@@ -20,12 +22,16 @@ function price(pickupDate, dropoffDate, carType, licenseAge, age) {
   }
 
   let basePrice = calculatePrice(age, rentDays);
+  
+  let weekendPrice = calculateWeekendPrice(age, weekends);
+  console.log(weekendPrice)
 
-  let rentalPrice = calculateTotalPrice(basePrice, age, carType, rentDays, highSeason, licenseAge)
+  let rentalPrice = calculateTotalPrice(basePrice, weekendPrice, age, carType, rentDays, highSeason, licenseAge, weekends);
   return formatPrice(rentalPrice)
 }
-function calculateTotalPrice(basePrice, age, carType, rentDays, highSeason, licenseAge, isWeekend) {
+function calculateTotalPrice(basePrice, weekendPrice, age, carType, rentDays, highSeason, licenseAge, weekends) {
   let rentalPrice = basePrice;
+
   if (highSeason) {
     rentalPrice = basePrice * 1.15;
   }
@@ -46,8 +52,9 @@ function calculateTotalPrice(basePrice, age, carType, rentDays, highSeason, lice
     rentalPrice = basePrice + 15;
   }
 
-  if (isWeekend) {
-    basePrice *= 1.05
+  if (weekends) {
+    rentalPrice = (basePrice - weekendPrice) + (weekendPrice * 1.05);
+    
   }
 
   return rentalPrice;
@@ -56,6 +63,10 @@ function calculateTotalPrice(basePrice, age, carType, rentDays, highSeason, lice
 
 function calculatePrice(age, rentDays) {
   return age * rentDays;
+}
+
+function calculateWeekendPrice(age, weekends) {
+  return age * weekends;
 }
 
 function totalRentDays(pickupDate, dropoffDate) {
@@ -81,7 +92,6 @@ function isDriverUnderAge(age) {
 }
 
 function isRaceUnder25(carType, age) {
-  console.log(carType)
   return age <= 25 && carType === "Racer";
 }
 
@@ -112,15 +122,18 @@ function isLicenseOlderOlder(licenseAge) {
 function countWeekends(pickupDate, dropoffDate) {
   let count = 0;
   let currentDate = new Date(pickupDate);
+  let laterDate = new Date(dropoffDate);
 
-  while (currentDate <= dropoffDate) {
+  while (currentDate <= laterDate) {
     const day = currentDate.getDay();
     if (day === 0 || day === 6) {
       count++;
     }
     currentDate.setDate(currentDate.getDate() + 1);
   }
+  console.log(count)
   return count;
+
 }
 
 
@@ -139,3 +152,4 @@ exports.formatPrice = formatPrice;
 exports.isLicenseValid = isLicenseValid;
 exports.isLicenseOlder = isLicenseOlder;
 exports.isLicenseOlderOlder = isLicenseOlderOlder;
+exports.countWeekends = countWeekends;
